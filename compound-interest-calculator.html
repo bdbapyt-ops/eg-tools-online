@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compound Interest Calculator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:500px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+    margin-bottom:20px;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    color:#444;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#007bff;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    color:#fff;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.calculate{
+    background:#007bff;
+}
+
+.reset{
+    background:#dc3545;
+}
+
+.calculate:hover{
+    background:#0056b3;
+}
+
+.reset:hover{
+    background:#b02a37;
+}
+
+.result{
+    margin-top:25px;
+    background:#f7f7f7;
+    border-radius:10px;
+    padding:18px;
+}
+
+.result p{
+    font-size:17px;
+    margin:10px 0;
+}
+
+.result span{
+    font-weight:bold;
+    color:#007bff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Compound Interest Calculator</h1>
+
+<div class="input-group">
+<label>Principal Amount</label>
+<input type="number" id="principal" placeholder="10000">
+</div>
+
+<div class="input-group">
+<label>Annual Interest Rate (%)</label>
+<input type="number" id="rate" placeholder="8">
+</div>
+
+<div class="input-group">
+<label>Time (Years)</label>
+<input type="number" id="time" placeholder="5">
+</div>
+
+<div class="input-group">
+<label>Compound Frequency</label>
+
+<select id="frequency">
+<option value="1">Yearly</option>
+<option value="2">Half-Yearly</option>
+<option value="4">Quarterly</option>
+<option value="12">Monthly</option>
+<option value="365">Daily</option>
+</select>
+
+</div>
+
+<div class="buttons">
+
+<button class="calculate" onclick="calculateInterest()">
+Calculate
+</button>
+
+<button class="reset" onclick="resetForm()">
+Reset
+</button>
+
+</div>
+
+<div class="result">
+
+<p>Total Amount :
+<span id="amount">0.00</span>
+</p>
+
+<p>Total Interest :
+<span id="interest">0.00</span>
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+function calculateInterest(){
+
+let P=parseFloat(document.getElementById("principal").value);
+
+let R=parseFloat(document.getElementById("rate").value);
+
+let T=parseFloat(document.getElementById("time").value);
+
+let N=parseFloat(document.getElementById("frequency").value);
+
+if(isNaN(P)||isNaN(R)||isNaN(T)||P<=0||R<0||T<=0){
+
+alert("Please enter valid values.");
+
+return;
+
+}
+
+let amount=P*Math.pow((1+(R/100)/N),(N*T));
+
+let interest=amount-P;
+
+document.getElementById("amount").innerHTML=
+amount.toFixed(2);
+
+document.getElementById("interest").innerHTML=
+interest.toFixed(2);
+
+}
+
+function resetForm(){
+
+document.getElementById("principal").value="";
+
+document.getElementById("rate").value="";
+
+document.getElementById("time").value="";
+
+document.getElementById("frequency").value="1";
+
+document.getElementById("amount").innerHTML="0.00";
+
+document.getElementById("interest").innerHTML="0.00";
+
+}
+
+</script>
+
+</body>
+</html>

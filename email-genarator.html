@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#111827;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:700px;
+    background:#1f2937;
+    padding:25px;
+    border-radius:12px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    margin-bottom:15px;
+    outline:none;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    color:#fff;
+    font-size:15px;
+}
+
+.generate{
+    background:#16a34a;
+}
+
+.copyall{
+    background:#2563eb;
+}
+
+.clear{
+    background:#dc2626;
+}
+
+.status{
+    margin-top:15px;
+    color:#22c55e;
+    text-align:center;
+    font-weight:bold;
+}
+
+.result{
+    margin-top:20px;
+    max-height:350px;
+    overflow:auto;
+}
+
+.item{
+    background:#374151;
+    padding:10px;
+    margin-bottom:8px;
+    border-radius:8px;
+    word-break:break-all;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Email Generator</h2>
+
+<input
+type="text"
+id="gmail"
+placeholder="example@gmail.com">
+
+<div class="buttons">
+<button class="generate" onclick="generate()">Generate + Copy</button>
+<button class="copyall" onclick="copyAll()">Copy All</button>
+<button class="clear" onclick="clearList()">Clear</button>
+</div>
+
+<div class="status" id="status"></div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+function randomCase(text){
+
+    let out="";
+
+    for(let c of text){
+
+        if(Math.random()>0.5){
+            out+=c.toUpperCase();
+        }else{
+            out+=c.toLowerCase();
+        }
+
+    }
+
+    return out;
+
+}
+
+function generate(){
+
+    let email=document.getElementById("gmail").value.trim();
+
+    if(email==""){
+        alert("Enter Gmail Address");
+        return;
+    }
+
+    if(!email.toLowerCase().endsWith("@gmail.com")){
+        alert("Only Gmail Address Allowed");
+        return;
+    }
+
+    let username=email.split("@")[0];
+
+    let newMail=randomCase(username)+"@gmail.com";
+
+    // Clipboard Copy
+    navigator.clipboard.writeText(newMail);
+
+    document.getElementById("status").innerHTML="✅ Copied: "+newMail;
+
+    let div=document.createElement("div");
+    div.className="item";
+    div.textContent=newMail;
+
+    document.getElementById("result").prepend(div);
+
+}
+
+function copyAll(){
+
+    let data=[];
+
+    document.querySelectorAll(".item").forEach(function(x){
+        data.push(x.innerText);
+    });
+
+    if(data.length==0){
+        alert("Nothing to Copy");
+        return;
+    }
+
+    navigator.clipboard.writeText(data.join("\n"));
+
+    document.getElementById("status").innerHTML="✅ All Gmail Copied";
+
+}
+
+function clearList(){
+
+    document.getElementById("result").innerHTML="";
+    document.getElementById("status").innerHTML="";
+
+}
+
+</script>
+
+</body>
+</html>

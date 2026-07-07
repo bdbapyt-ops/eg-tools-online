@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorem Ipsum Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:850px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:6px;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#007bff;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+textarea{
+    width:100%;
+    height:300px;
+    margin-top:20px;
+    padding:15px;
+    border:2px solid #ddd;
+    border-radius:10px;
+    resize:vertical;
+    font-size:15px;
+    outline:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Lorem Ipsum Generator</h1>
+
+<div class="controls">
+
+<div>
+<label>Generate</label>
+<input type="number" id="count" value="3" min="1" max="100">
+</div>
+
+<div>
+<label>Type</label>
+
+<select id="type">
+<option value="paragraph">Paragraphs</option>
+<option value="sentence">Sentences</option>
+<option value="word">Words</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button onclick="generateLorem()">Generate</button>
+
+<button onclick="copyText()">Copy</button>
+
+<button onclick="downloadText()">Download</button>
+
+<button onclick="clearText()">Clear</button>
+
+</div>
+
+<textarea id="output" placeholder="Generated text will appear here..."></textarea>
+
+</div>
+
+<script>
+
+const lorem="Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+function randomSentence(){
+
+let words=lorem.split(" ");
+
+let len=Math.floor(Math.random()*12)+10;
+
+let sentence=[];
+
+for(let i=0;i<len;i++){
+
+sentence.push(words[Math.floor(Math.random()*words.length)]);
+
+}
+
+let text=sentence.join(" ");
+
+return text.charAt(0).toUpperCase()+text.slice(1)+".";
+}
+
+function generateLorem(){
+
+let count=parseInt(document.getElementById("count").value);
+
+let type=document.getElementById("type").value;
+
+let output=document.getElementById("output");
+
+let result="";
+
+if(type==="word"){
+
+let words=lorem.split(" ");
+
+for(let i=0;i<count;i++){
+
+result+=words[Math.floor(Math.random()*words.length)]+" ";
+
+}
+
+}
+
+else if(type==="sentence"){
+
+for(let i=0;i<count;i++){
+
+result+=randomSentence()+" ";
+
+}
+
+}
+
+else{
+
+for(let i=0;i<count;i++){
+
+let p="";
+
+for(let j=0;j<5;j++){
+
+p+=randomSentence()+" ";
+
+}
+
+result+=p+"\n\n";
+
+}
+
+}
+
+output.value=result.trim();
+
+}
+
+function copyText(){
+
+let text=document.getElementById("output");
+
+if(text.value===""){
+
+alert("Nothing to copy.");
+
+return;
+
+}
+
+navigator.clipboard.writeText(text.value);
+
+alert("Copied!");
+
+}
+
+function downloadText(){
+
+let text=document.getElementById("output").value;
+
+if(text===""){
+
+alert("Generate text first.");
+
+return;
+
+}
+
+let blob=new Blob([text],{type:"text/plain"});
+
+let a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="lorem-ipsum.txt";
+
+a.click();
+
+}
+
+function clearText(){
+
+document.getElementById("output").value="";
+
+}
+
+</script>
+
+</body>
+</html>

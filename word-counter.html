@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Counter Tool</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+textarea{
+width:100%;
+height:300px;
+padding:15px;
+font-size:16px;
+font-family:Consolas,monospace;
+border:2px solid #ddd;
+border-radius:10px;
+resize:vertical;
+outline:none;
+}
+
+textarea:focus{
+border-color:#007bff;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
+margin-top:20px;
+}
+
+.card{
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+text-align:center;
+}
+
+.card h3{
+font-size:16px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:22px;
+font-weight:bold;
+color:#007bff;
+}
+
+.buttons{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:10px;
+margin-top:20px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#007bff;
+color:#fff;
+font-size:15px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Word Counter Tool</h1>
+
+<textarea id="text" placeholder="Type or paste your text here..."></textarea>
+
+<div class="stats">
+
+<div class="card">
+<h3>Words</h3>
+<p id="words">0</p>
+</div>
+
+<div class="card">
+<h3>Characters</h3>
+<p id="characters">0</p>
+</div>
+
+<div class="card">
+<h3>Characters (No Spaces)</h3>
+<p id="nospaces">0</p>
+</div>
+
+<div class="card">
+<h3>Sentences</h3>
+<p id="sentences">0</p>
+</div>
+
+<div class="card">
+<h3>Paragraphs</h3>
+<p id="paragraphs">0</p>
+</div>
+
+<div class="card">
+<h3>Reading Time</h3>
+<p id="reading">0 min</p>
+</div>
+
+<div class="card">
+<h3>Speaking Time</h3>
+<p id="speaking">0 min</p>
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button onclick="copyText()">Copy</button>
+
+<button onclick="downloadText()">Download</button>
+
+<button onclick="clearText()">Clear</button>
+
+</div>
+
+</div>
+
+<script>
+
+const textarea=document.getElementById("text");
+
+textarea.addEventListener("input",updateStats);
+
+function updateStats(){
+
+const text=textarea.value;
+
+const words=text.trim()===""
+?[]
+:text.trim().split(/\s+/);
+
+const wordCount=words.length;
+
+const characterCount=text.length;
+
+const noSpace=text.replace(/\s/g,"").length;
+
+const sentenceCount=text.trim()===""
+?0
+:(text.match(/[.!?]+/g)||[]).length;
+
+const paragraphCount=text.trim()===""
+?0
+:text.split(/\n\s*\n/).filter(p=>p.trim()!=="").length;
+
+const reading=Math.max(1,Math.ceil(wordCount/200));
+
+const speaking=Math.max(1,Math.ceil(wordCount/130));
+
+document.getElementById("words").textContent=wordCount;
+document.getElementById("characters").textContent=characterCount;
+document.getElementById("nospaces").textContent=noSpace;
+document.getElementById("sentences").textContent=sentenceCount;
+document.getElementById("paragraphs").textContent=paragraphCount;
+document.getElementById("reading").textContent=
+wordCount?reading+" min":"0 min";
+document.getElementById("speaking").textContent=
+wordCount?speaking+" min":"0 min";
+
+}
+
+function copyText(){
+
+if(textarea.value===""){
+
+alert("Nothing to copy.");
+
+return;
+
+}
+
+navigator.clipboard.writeText(textarea.value);
+
+alert("Copied!");
+
+}
+
+function downloadText(){
+
+if(textarea.value===""){
+
+alert("Nothing to download.");
+
+return;
+
+}
+
+const blob=new Blob([textarea.value],{type:"text/plain"});
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="text.txt";
+
+a.click();
+
+}
+
+function clearText(){
+
+textarea.value="";
+
+updateStats();
+
+}
+
+updateStats();
+
+</script>
+
+</body>
+</html>

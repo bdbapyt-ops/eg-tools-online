@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter & Validator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
+
+textarea{
+    width:100%;
+    height:350px;
+    resize:vertical;
+    padding:15px;
+    font-size:15px;
+    font-family:Consolas,monospace;
+    border:2px solid #ddd;
+    border-radius:10px;
+    outline:none;
+}
+
+textarea:focus{
+    border-color:#007bff;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+#message{
+    margin-top:20px;
+    padding:12px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.success{
+    background:#d4edda;
+    color:#155724;
+}
+
+.error{
+    background:#f8d7da;
+    color:#721c24;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>JSON Formatter & Validator</h1>
+
+<textarea id="jsonInput" placeholder='Paste JSON here...'></textarea>
+
+<div class="buttons">
+<button onclick="formatJSON()">Format JSON</button>
+<button onclick="minifyJSON()">Minify JSON</button>
+<button onclick="validateJSON()">Validate JSON</button>
+<button onclick="copyJSON()">Copy</button>
+<button onclick="downloadJSON()">Download</button>
+<button onclick="clearJSON()">Clear</button>
+</div>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+const input=document.getElementById("jsonInput");
+const message=document.getElementById("message");
+
+function showMessage(text,type){
+
+message.className=type;
+message.innerHTML=text;
+
+}
+
+function formatJSON(){
+
+try{
+
+let obj=JSON.parse(input.value);
+
+input.value=JSON.stringify(obj,null,4);
+
+showMessage("✅ JSON formatted successfully.","success");
+
+}catch(e){
+
+showMessage("❌ "+e.message,"error");
+
+}
+
+}
+
+function minifyJSON(){
+
+try{
+
+let obj=JSON.parse(input.value);
+
+input.value=JSON.stringify(obj);
+
+showMessage("✅ JSON minified successfully.","success");
+
+}catch(e){
+
+showMessage("❌ "+e.message,"error");
+
+}
+
+}
+
+function validateJSON(){
+
+try{
+
+JSON.parse(input.value);
+
+showMessage("✅ Valid JSON","success");
+
+}catch(e){
+
+showMessage("❌ Invalid JSON : "+e.message,"error");
+
+}
+
+}
+
+function copyJSON(){
+
+if(input.value==""){
+
+alert("Nothing to copy!");
+
+return;
+
+}
+
+navigator.clipboard.writeText(input.value);
+
+showMessage("✅ Copied to clipboard.","success");
+
+}
+
+function clearJSON(){
+
+input.value="";
+
+message.innerHTML="";
+message.className="";
+
+}
+
+function downloadJSON(){
+
+try{
+
+JSON.parse(input.value);
+
+const blob=new Blob([input.value],{type:"application/json"});
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="formatted.json";
+
+a.click();
+
+showMessage("✅ JSON downloaded.","success");
+
+}catch(e){
+
+showMessage("❌ Invalid JSON.","error");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

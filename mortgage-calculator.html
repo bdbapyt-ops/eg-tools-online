@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mortgage Calculator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:550px;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+.input-group{
+margin-bottom:15px;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:12px;
+border:2px solid #ddd;
+border-radius:8px;
+font-size:16px;
+outline:none;
+}
+
+input:focus{
+border-color:#007bff;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+margin-top:20px;
+}
+
+button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+color:#fff;
+}
+
+.calculate{
+background:#007bff;
+}
+
+.calculate:hover{
+background:#0056b3;
+}
+
+.reset{
+background:#dc3545;
+}
+
+.reset:hover{
+background:#b02a37;
+}
+
+.result{
+margin-top:25px;
+background:#f8f9fa;
+padding:18px;
+border-radius:10px;
+}
+
+.result p{
+margin:12px 0;
+font-size:17px;
+}
+
+.result span{
+font-weight:bold;
+color:#007bff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Mortgage Calculator</h1>
+
+<div class="input-group">
+<label>Home Price</label>
+<input type="number" id="homePrice" placeholder="300000">
+</div>
+
+<div class="input-group">
+<label>Down Payment</label>
+<input type="number" id="downPayment" placeholder="60000">
+</div>
+
+<div class="input-group">
+<label>Annual Interest Rate (%)</label>
+<input type="number" id="interestRate" placeholder="6.5">
+</div>
+
+<div class="input-group">
+<label>Loan Term (Years)</label>
+<input type="number" id="loanTerm" placeholder="30">
+</div>
+
+<div class="buttons">
+<button class="calculate" onclick="calculateMortgage()">Calculate</button>
+<button class="reset" onclick="resetForm()">Reset</button>
+</div>
+
+<div class="result">
+<p>Loan Amount: <span id="loanAmount">0.00</span></p>
+<p>Monthly Payment: <span id="monthlyPayment">0.00</span></p>
+<p>Total Interest: <span id="totalInterest">0.00</span></p>
+<p>Total Payment: <span id="totalPayment">0.00</span></p>
+</div>
+
+</div>
+
+<script>
+
+function calculateMortgage(){
+
+let homePrice=parseFloat(document.getElementById("homePrice").value);
+let downPayment=parseFloat(document.getElementById("downPayment").value);
+let annualRate=parseFloat(document.getElementById("interestRate").value);
+let years=parseFloat(document.getElementById("loanTerm").value);
+
+if(
+isNaN(homePrice)||
+isNaN(downPayment)||
+isNaN(annualRate)||
+isNaN(years)||
+homePrice<=0||
+downPayment<0||
+downPayment>=homePrice||
+annualRate<0||
+years<=0
+){
+
+alert("Please enter valid values.");
+return;
+
+}
+
+let loan=homePrice-downPayment;
+
+let monthlyRate=annualRate/12/100;
+let months=years*12;
+
+let monthlyPayment;
+
+if(monthlyRate===0){
+
+monthlyPayment=loan/months;
+
+}else{
+
+monthlyPayment=
+(loan*monthlyRate*Math.pow(1+monthlyRate,months))/
+(Math.pow(1+monthlyRate,months)-1);
+
+}
+
+let totalPayment=monthlyPayment*months;
+let totalInterest=totalPayment-loan;
+
+document.getElementById("loanAmount").innerHTML=loan.toFixed(2);
+document.getElementById("monthlyPayment").innerHTML=monthlyPayment.toFixed(2);
+document.getElementById("totalInterest").innerHTML=totalInterest.toFixed(2);
+document.getElementById("totalPayment").innerHTML=totalPayment.toFixed(2);
+
+}
+
+function resetForm(){
+
+document.getElementById("homePrice").value="";
+document.getElementById("downPayment").value="";
+document.getElementById("interestRate").value="";
+document.getElementById("loanTerm").value="";
+
+document.getElementById("loanAmount").innerHTML="0.00";
+document.getElementById("monthlyPayment").innerHTML="0.00";
+document.getElementById("totalInterest").innerHTML="0.00";
+document.getElementById("totalPayment").innerHTML="0.00";
+
+}
+
+</script>
+
+</body>
+</html>

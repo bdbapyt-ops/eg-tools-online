@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+}
+
+.container{
+    width:500px;
+    max-width:95%;
+    margin:40px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+h2{
+    text-align:center;
+}
+
+select,
+textarea,
+button{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    font-size:16px;
+}
+
+textarea{
+    height:180px;
+    resize:vertical;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+#qrcode{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+}
+
+#download{
+    display:none;
+    margin-top:15px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>QR Code Generator</h2>
+
+<select id="type">
+<option value="text">Text</option>
+<option value="url">Link</option>
+<option value="vcard">vCard</option>
+</select>
+
+<textarea id="data" placeholder="Enter Text, URL or vCard"></textarea>
+
+<button onclick="generateQR()">Generate QR</button>
+
+<div id="qrcode"></div>
+
+<button id="download" onclick="downloadQR()">Download PNG</button>
+
+</div>
+
+<script>
+
+function generateQR(){
+
+const box=document.getElementById("qrcode");
+box.innerHTML="";
+
+const text=document.getElementById("data").value.trim();
+
+if(text==""){
+    alert("Please enter data");
+    return;
+}
+
+new QRCode(box,{
+    text:text,
+    width:250,
+    height:250
+});
+
+setTimeout(()=>{
+document.getElementById("download").style.display="block";
+},300);
+
+}
+
+function downloadQR(){
+
+const img=document.querySelector("#qrcode img");
+const canvas=document.querySelector("#qrcode canvas");
+
+let source;
+
+if(img){
+source=img.src;
+}else{
+source=canvas.toDataURL("image/png");
+}
+
+const a=document.createElement("a");
+a.href=source;
+a.download="QRCode.png";
+a.click();
+
+}
+
+document.getElementById("type").addEventListener("change",function(){
+
+const t=this.value;
+const area=document.getElementById("data");
+
+if(t=="text"){
+area.placeholder="Enter any text";
+area.value="";
+}
+
+if(t=="url"){
+area.placeholder="https://example.com";
+area.value="";
+}
+
+if(t=="vcard"){
+area.value=`BEGIN:VCARD
+VERSION:3.0
+FN:John Doe
+ORG:Company Name
+TEL:+8801700000000
+EMAIL:john@example.com
+URL:https://example.com
+END:VCARD`;
+}
+
+});
+
+</script>
+
+</body>
+</html>

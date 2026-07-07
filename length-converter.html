@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Length Converter</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+background:#fff;
+width:100%;
+max-width:520px;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+.input-group{
+margin-bottom:15px;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+font-weight:bold;
+}
+
+input,select{
+width:100%;
+padding:12px;
+font-size:16px;
+border:2px solid #ddd;
+border-radius:8px;
+outline:none;
+}
+
+input:focus,
+select:focus{
+border-color:#007bff;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+margin-top:20px;
+}
+
+button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+color:#fff;
+}
+
+.swap{
+background:#ff9800;
+}
+
+.convert{
+background:#007bff;
+}
+
+.reset{
+background:#dc3545;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.result{
+margin-top:25px;
+padding:15px;
+background:#f8f9fa;
+border-radius:8px;
+font-size:18px;
+text-align:center;
+}
+
+.result span{
+font-weight:bold;
+color:#007bff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Length Converter</h1>
+
+<div class="input-group">
+<label>Value</label>
+<input type="number" id="value" placeholder="Enter value">
+</div>
+
+<div class="input-group">
+<label>From</label>
+<select id="from">
+<option value="1">Meter</option>
+<option value="1000">Kilometer</option>
+<option value="0.01">Centimeter</option>
+<option value="0.001">Millimeter</option>
+<option value="1609.344">Mile</option>
+<option value="0.9144">Yard</option>
+<option value="0.3048">Foot</option>
+<option value="0.0254">Inch</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>To</label>
+<select id="to">
+<option value="1">Meter</option>
+<option value="1000">Kilometer</option>
+<option value="0.01">Centimeter</option>
+<option value="0.001">Millimeter</option>
+<option value="1609.344">Mile</option>
+<option value="0.9144">Yard</option>
+<option value="0.3048">Foot</option>
+<option value="0.0254">Inch</option>
+</select>
+</div>
+
+<div class="buttons">
+<button class="convert" onclick="convert()">Convert</button>
+<button class="swap" onclick="swapUnits()">Swap</button>
+<button class="reset" onclick="resetAll()">Reset</button>
+</div>
+
+<div class="result">
+Result:<br>
+<span id="result">0</span>
+</div>
+
+</div>
+
+<script>
+
+function convert(){
+
+let value=parseFloat(document.getElementById("value").value);
+
+if(isNaN(value)){
+alert("Please enter a value.");
+return;
+}
+
+let from=parseFloat(document.getElementById("from").value);
+let to=parseFloat(document.getElementById("to").value);
+
+let meter=value*from;
+let result=meter/to;
+
+document.getElementById("result").innerHTML=result.toFixed(6);
+
+}
+
+function swapUnits(){
+
+let from=document.getElementById("from");
+let to=document.getElementById("to");
+
+let temp=from.value;
+from.value=to.value;
+to.value=temp;
+
+convert();
+
+}
+
+function resetAll(){
+
+document.getElementById("value").value="";
+document.getElementById("from").selectedIndex=0;
+document.getElementById("to").selectedIndex=0;
+document.getElementById("result").innerHTML="0";
+
+}
+
+document.getElementById("value").addEventListener("input",convert);
+document.getElementById("from").addEventListener("change",convert);
+document.getElementById("to").addEventListener("change",convert);
+
+</script>
+
+</body>
+</html>

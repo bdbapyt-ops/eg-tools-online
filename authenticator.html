@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2FA Code Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#111827;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:#fff;
+}
+
+.container{
+    width:420px;
+    background:#1f2937;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.code{
+    margin-top:25px;
+    text-align:center;
+    font-size:40px;
+    letter-spacing:6px;
+    font-weight:bold;
+}
+
+.timer{
+    text-align:center;
+    margin-top:15px;
+    font-size:18px;
+}
+
+.progress{
+    width:100%;
+    height:8px;
+    background:#374151;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.bar{
+    height:100%;
+    width:100%;
+    background:#10b981;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>2FA TOTP Generator</h2>
+
+<input type="text" id="secret" placeholder="Enter Base32 Secret">
+
+<button onclick="generate()">Generate</button>
+
+<div class="code" id="code">------</div>
+
+<div class="timer">
+<span id="time">30</span> sec
+</div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+<script>
+
+let currentSecret="";
+
+function base32Decode(base32){
+
+const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+let bits="";
+let result=[];
+
+base32=base32.replace(/=+$/,"").toUpperCase();
+
+for(let c of base32){
+
+let val=alphabet.indexOf(c);
+
+if(val==-1) continue;
+
+bits+=val.toString(2).padStart(5,"0");
+
+}
+
+for(let i=0;i+8<=bits.length;i+=8){
+
+result.push(parseInt(bits.substr(i,8),2));
+
+}
+
+return Uint8Array.from(result);
+
+}
+
+async function generate(){
+
+currentSecret=document.getElementById("secret").value.trim();
+
+if(currentSecret=="") return;
+
+await updateCode();
+
+}
+
+async function updateCode(){
+
+if(currentSecret=="") return;
+
+let key=base32Decode(currentSecret);
+
+let epoch=Math.floor(Date.now()/1000);
+
+let counter=Math.floor(epoch/30);
+
+let buffer=new ArrayBuffer(8);
+
+let view=new DataView(buffer);
+
+view.setUint32(4,counter);
+
+let cryptoKey=await crypto.subtle.importKey(
+"raw",
+key,
+{name:"HMAC",hash:"SHA-1"},
+false,
+["sign"]
+);
+
+let hmac=await crypto.subtle.sign("HMAC",cryptoKey,buffer);
+
+let hash=new Uint8Array(hmac);
+
+let offset=hash[19]&0xf;
+
+let binary=((hash[offset]&0x7f)<<24)
+|((hash[offset+1]&0xff)<<16)
+|((hash[offset+2]&0xff)<<8)
+|(hash[offset+3]&0xff);
+
+let otp=(binary%1000000).toString().padStart(6,"0");
+
+document.getElementById("code").innerHTML=otp;
+
+}
+
+setInterval(()=>{
+
+let sec=30-(Math.floor(Date.now()/1000)%30);
+
+document.getElementById("time").innerHTML=sec;
+
+document.getElementById("bar").style.width=(sec/30*100)+"%";
+
+if(sec==30){
+
+updateCode();
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>

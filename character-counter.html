@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Counter Tool</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:850px;
+    background:#fff;
+    border-radius:12px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
+
+textarea{
+    width:100%;
+    height:250px;
+    padding:15px;
+    resize:vertical;
+    border:2px solid #ddd;
+    border-radius:10px;
+    outline:none;
+    font-size:16px;
+}
+
+textarea:focus{
+    border-color:#007bff;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.card{
+    background:#007bff;
+    color:#fff;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.card h2{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+button{
+    flex:1;
+    min-width:140px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    color:white;
+}
+
+.copy{
+    background:#28a745;
+}
+
+.clear{
+    background:#dc3545;
+}
+
+.copy:hover{
+    background:#218838;
+}
+
+.clear:hover{
+    background:#c82333;
+}
+
+.footer{
+    margin-top:20px;
+    text-align:center;
+    color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Character Counter Tool</h1>
+
+<textarea id="text" placeholder="Type or paste your text here..."></textarea>
+
+<div class="stats">
+
+<div class="card">
+<h2 id="characters">0</h2>
+<p>Characters</p>
+</div>
+
+<div class="card">
+<h2 id="withoutSpace">0</h2>
+<p>Without Spaces</p>
+</div>
+
+<div class="card">
+<h2 id="words">0</h2>
+<p>Words</p>
+</div>
+
+<div class="card">
+<h2 id="lines">0</h2>
+<p>Lines</p>
+</div>
+
+</div>
+
+<div class="buttons">
+<button class="copy" onclick="copyText()">Copy Text</button>
+<button class="clear" onclick="clearText()">Clear</button>
+</div>
+
+<div class="footer">
+Made with HTML, CSS & JavaScript
+</div>
+
+</div>
+
+<script>
+
+const textarea=document.getElementById("text");
+
+textarea.addEventListener("input",updateCounter);
+
+function updateCounter(){
+
+let text=textarea.value;
+
+document.getElementById("characters").innerText=text.length;
+
+document.getElementById("withoutSpace").innerText=
+text.replace(/\s/g,'').length;
+
+document.getElementById("words").innerText=
+text.trim()=="" ? 0 : text.trim().split(/\s+/).length;
+
+document.getElementById("lines").innerText=
+text=="" ? 0 : text.split(/\n/).length;
+
+}
+
+function copyText(){
+
+if(textarea.value==""){
+alert("Nothing to copy!");
+return;
+}
+
+navigator.clipboard.writeText(textarea.value);
+
+alert("Copied Successfully!");
+
+}
+
+function clearText(){
+
+textarea.value="";
+
+updateCounter();
+
+}
+
+updateCounter();
+
+</script>
+
+</body>
+</html>

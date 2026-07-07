@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Name Generator</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.container{
+    width:400px;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+#name{
+    font-size:24px;
+    font-weight:bold;
+    color:#007bff;
+    margin:20px 0;
+    word-break:break-word;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Fake Name Generator</h2>
+
+<div id="name">Click Generate</div>
+
+<button onclick="generateName()">Generate</button>
+<button onclick="copyName()">Copy</button>
+
+</div>
+
+<script>
+
+const firstNames=[
+"James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles",
+"Christopher","Daniel","Matthew","Anthony","Mark","Donald","Steven","Paul","Andrew","Joshua",
+"Kevin","Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan","Jacob",
+"Emily","Emma","Olivia","Sophia","Ava","Isabella","Mia","Charlotte","Amelia","Harper",
+"Evelyn","Abigail","Ella","Scarlett","Grace","Lily","Chloe","Victoria","Zoey","Nora"
+];
+
+const lastNames=[
+"Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Wilson","Taylor",
+"Anderson","Thomas","Jackson","White","Harris","Martin","Thompson","Moore","Clark","Lewis",
+"Walker","Hall","Allen","Young","King","Wright","Scott","Green","Baker","Adams",
+"Nelson","Hill","Campbell","Mitchell","Roberts","Carter","Phillips","Evans","Turner","Parker",
+"Collins","Edwards","Stewart","Morris","Rogers","Reed","Cook","Morgan","Bell","Murphy"
+];
+
+function generateName(){
+
+const first=firstNames[Math.floor(Math.random()*firstNames.length)];
+
+const last=lastNames[Math.floor(Math.random()*lastNames.length)];
+
+document.getElementById("name").innerHTML=first+" "+last;
+
+}
+
+function copyName(){
+
+const text=document.getElementById("name").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("Copied!");
+
+}
+
+generateName();
+
+</script>
+
+</body>
+</html>

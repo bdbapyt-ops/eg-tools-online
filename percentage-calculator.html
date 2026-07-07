@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:700px;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+.section{
+margin-bottom:30px;
+padding:15px;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+.section h2{
+margin-bottom:15px;
+font-size:20px;
+color:#007bff;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:2px solid #ddd;
+border-radius:8px;
+font-size:16px;
+outline:none;
+}
+
+input:focus{
+border-color:#007bff;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#007bff;
+color:#fff;
+cursor:pointer;
+margin-right:10px;
+margin-top:10px;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.result{
+margin-top:12px;
+padding:12px;
+background:#f8f9fa;
+border-radius:8px;
+font-size:18px;
+font-weight:bold;
+color:#007bff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Percentage Calculator</h1>
+
+<div class="section">
+
+<h2>X% of Y</h2>
+
+<input type="number" id="percent" placeholder="Percentage">
+
+<input type="number" id="number" placeholder="Number">
+
+<button onclick="calculatePercent()">Calculate</button>
+
+<div class="result" id="result1">0</div>
+
+</div>
+
+<div class="section">
+
+<h2>What Percentage is X of Y?</h2>
+
+<input type="number" id="value1" placeholder="X">
+
+<input type="number" id="value2" placeholder="Y">
+
+<button onclick="findPercentage()">Calculate</button>
+
+<div class="result" id="result2">0%</div>
+
+</div>
+
+<div class="section">
+
+<h2>Percentage Increase / Decrease</h2>
+
+<input type="number" id="oldValue" placeholder="Old Value">
+
+<input type="number" id="newValue" placeholder="New Value">
+
+<button onclick="percentageChange()">Calculate</button>
+
+<div class="result" id="result3">0%</div>
+
+</div>
+
+<button onclick="copyResult()">Copy Result</button>
+
+<button onclick="resetAll()">Reset</button>
+
+</div>
+
+<script>
+
+let lastResult="";
+
+function calculatePercent(){
+
+let p=parseFloat(document.getElementById("percent").value);
+let n=parseFloat(document.getElementById("number").value);
+
+if(isNaN(p)||isNaN(n)){
+alert("Enter valid values");
+return;
+}
+
+let result=(p/100)*n;
+
+lastResult=result.toFixed(2);
+
+document.getElementById("result1").innerHTML=lastResult;
+
+}
+
+function findPercentage(){
+
+let x=parseFloat(document.getElementById("value1").value);
+let y=parseFloat(document.getElementById("value2").value);
+
+if(isNaN(x)||isNaN(y)||y==0){
+alert("Enter valid values");
+return;
+}
+
+let result=(x/y)*100;
+
+lastResult=result.toFixed(2)+"%";
+
+document.getElementById("result2").innerHTML=lastResult;
+
+}
+
+function percentageChange(){
+
+let oldVal=parseFloat(document.getElementById("oldValue").value);
+let newVal=parseFloat(document.getElementById("newValue").value);
+
+if(isNaN(oldVal)||isNaN(newVal)||oldVal==0){
+alert("Enter valid values");
+return;
+}
+
+let result=((newVal-oldVal)/oldVal)*100;
+
+lastResult=result.toFixed(2)+"%";
+
+document.getElementById("result3").innerHTML=lastResult;
+
+}
+
+function copyResult(){
+
+if(lastResult==""){
+alert("No result to copy.");
+return;
+}
+
+navigator.clipboard.writeText(lastResult);
+
+alert("Copied!");
+
+}
+
+function resetAll(){
+
+document.querySelectorAll("input").forEach(i=>i.value="");
+
+document.getElementById("result1").innerHTML="0";
+document.getElementById("result2").innerHTML="0%";
+document.getElementById("result3").innerHTML="0%";
+
+lastResult="";
+
+}
+
+</script>
+
+</body>
+</html>

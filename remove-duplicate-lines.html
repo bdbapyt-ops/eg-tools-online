@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remove Duplicate Lines</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f5f7fb;
+padding:20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+textarea{
+width:100%;
+height:250px;
+padding:15px;
+font-size:15px;
+font-family:Consolas,monospace;
+border:2px solid #ddd;
+border-radius:10px;
+resize:vertical;
+outline:none;
+}
+
+textarea:focus{
+border-color:#007bff;
+}
+
+.options{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+margin:20px 0;
+}
+
+.options label{
+display:flex;
+align-items:center;
+gap:6px;
+font-weight:bold;
+}
+
+.buttons{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:10px;
+margin-bottom:20px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#007bff;
+color:#fff;
+cursor:pointer;
+font-size:15px;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.stats{
+margin:15px 0;
+padding:12px;
+background:#f8f9fa;
+border-radius:8px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Remove Duplicate Lines</h1>
+
+<textarea id="input" placeholder="Paste your text here..."></textarea>
+
+<div class="options">
+
+<label>
+<input type="checkbox" id="ignoreCase">
+Ignore Case
+</label>
+
+<label>
+<input type="checkbox" id="removeEmpty">
+Remove Empty Lines
+</label>
+
+</div>
+
+<div class="buttons">
+
+<button onclick="removeDuplicates()">Remove Duplicates</button>
+
+<button onclick="copyResult()">Copy</button>
+
+<button onclick="downloadText()">Download</button>
+
+<button onclick="clearText()">Clear</button>
+
+</div>
+
+<div class="stats">
+Original Lines:
+<span id="originalCount">0</span>
+&nbsp; |
+&nbsp;
+Unique Lines:
+<span id="uniqueCount">0</span>
+</div>
+
+<textarea id="output" placeholder="Result..." readonly></textarea>
+
+</div>
+
+<script>
+
+function removeDuplicates(){
+
+let text=document.getElementById("input").value;
+
+let ignoreCase=document.getElementById("ignoreCase").checked;
+
+let removeEmpty=document.getElementById("removeEmpty").checked;
+
+let lines=text.split(/\r?\n/);
+
+document.getElementById("originalCount").textContent=lines.length;
+
+let seen=new Set();
+
+let result=[];
+
+for(let line of lines){
+
+let current=line;
+
+if(removeEmpty && current.trim()===""){
+continue;
+}
+
+let key=ignoreCase ? current.toLowerCase() : current;
+
+if(!seen.has(key)){
+seen.add(key);
+result.push(current);
+}
+
+}
+
+document.getElementById("output").value=result.join("\n");
+
+document.getElementById("uniqueCount").textContent=result.length;
+
+}
+
+function copyResult(){
+
+let output=document.getElementById("output");
+
+if(output.value===""){
+alert("Nothing to copy.");
+return;
+}
+
+navigator.clipboard.writeText(output.value);
+
+alert("Copied!");
+
+}
+
+function downloadText(){
+
+let text=document.getElementById("output").value;
+
+if(text===""){
+alert("Nothing to download.");
+return;
+}
+
+let blob=new Blob([text],{type:"text/plain"});
+
+let a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="unique-lines.txt";
+
+a.click();
+
+}
+
+function clearText(){
+
+document.getElementById("input").value="";
+document.getElementById("output").value="";
+document.getElementById("originalCount").textContent="0";
+document.getElementById("uniqueCount").textContent="0";
+
+}
+
+document.getElementById("input").addEventListener("input",function(){
+
+document.getElementById("originalCount").textContent=
+this.value==="" ? 0 : this.value.split(/\r?\n/).length;
+
+});
+
+</script>
+
+</body>
+</html>

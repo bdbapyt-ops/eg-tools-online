@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Resizer Tool</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:700px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input[type=file]{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.preview{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.preview img{
+    max-width:100%;
+    max-height:300px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+.row{
+    display:flex;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.col{
+    flex:1;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input[type=number]{
+    width:100%;
+    padding:10px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+input[type=checkbox]{
+    margin-right:6px;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Image Resizer Tool</h1>
+
+<input type="file" id="upload" accept="image/*">
+
+<div class="preview">
+<img id="preview" style="display:none;">
+</div>
+
+<div class="row">
+
+<div class="col">
+<label>Width (px)</label>
+<input type="number" id="width">
+</div>
+
+<div class="col">
+<label>Height (px)</label>
+<input type="number" id="height">
+</div>
+
+</div>
+
+<label>
+<input type="checkbox" id="lock" checked>
+Lock Aspect Ratio
+</label>
+
+<div class="buttons">
+
+<button onclick="resizeImage()">
+Resize Image
+</button>
+
+<button id="download" disabled>
+Download
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const upload=document.getElementById("upload");
+const preview=document.getElementById("preview");
+
+const widthInput=document.getElementById("width");
+const heightInput=document.getElementById("height");
+
+const lock=document.getElementById("lock");
+
+const download=document.getElementById("download");
+
+let image=new Image();
+
+let ratio=1;
+
+upload.onchange=function(e){
+
+const file=e.target.files[0];
+
+if(!file)return;
+
+const reader=new FileReader();
+
+reader.onload=function(ev){
+
+image.onload=function(){
+
+preview.src=image.src;
+preview.style.display="block";
+
+widthInput.value=image.width;
+heightInput.value=image.height;
+
+ratio=image.width/image.height;
+
+}
+
+image.src=ev.target.result;
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
+widthInput.oninput=function(){
+
+if(lock.checked){
+
+heightInput.value=Math.round(widthInput.value/ratio);
+
+}
+
+}
+
+heightInput.oninput=function(){
+
+if(lock.checked){
+
+widthInput.value=Math.round(heightInput.value*ratio);
+
+}
+
+}
+
+function resizeImage(){
+
+if(!image.src){
+
+alert("Upload an image first.");
+
+return;
+
+}
+
+const canvas=document.createElement("canvas");
+
+canvas.width=parseInt(widthInput.value);
+
+canvas.height=parseInt(heightInput.value);
+
+const ctx=canvas.getContext("2d");
+
+ctx.drawImage(image,0,0,canvas.width,canvas.height);
+
+preview.src=canvas.toDataURL("image/png");
+
+download.disabled=false;
+
+download.onclick=function(){
+
+const a=document.createElement("a");
+
+a.href=preview.src;
+
+a.download="resized-image.png";
+
+a.click();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID Generator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:700px;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:16px;
+border:2px solid #ddd;
+border-radius:8px;
+margin-bottom:20px;
+outline:none;
+}
+
+input:focus{
+border-color:#007bff;
+}
+
+.buttons{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:10px;
+margin-bottom:20px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#007bff;
+color:#fff;
+font-size:15px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+textarea{
+width:100%;
+height:320px;
+padding:15px;
+font-family:Consolas,monospace;
+font-size:15px;
+border:2px solid #ddd;
+border-radius:10px;
+resize:vertical;
+outline:none;
+}
+
+textarea:focus{
+border-color:#007bff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>UUID Generator</h1>
+
+<label>Number of UUIDs (1-100)</label>
+
+<input
+type="number"
+id="count"
+min="1"
+max="100"
+value="1">
+
+<div class="buttons">
+
+<button onclick="generateUUIDs()">Generate</button>
+
+<button onclick="copyUUIDs()">Copy</button>
+
+<button onclick="downloadUUIDs()">Download</button>
+
+<button onclick="clearUUIDs()">Clear</button>
+
+</div>
+
+<textarea
+id="output"
+placeholder="Generated UUIDs will appear here..."
+readonly></textarea>
+
+</div>
+
+<script>
+
+function uuid(){
+
+if(window.crypto && crypto.randomUUID){
+
+return crypto.randomUUID();
+
+}
+
+// Fallback
+
+return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+
+const r=Math.random()*16|0;
+
+const v=c=='x'?r:(r&0x3|0x8);
+
+return v.toString(16);
+
+});
+
+}
+
+function generateUUIDs(){
+
+let count=parseInt(document.getElementById("count").value);
+
+if(isNaN(count)||count<1||count>100){
+
+alert("Enter a number between 1 and 100.");
+
+return;
+
+}
+
+let list=[];
+
+for(let i=0;i<count;i++){
+
+list.push(uuid());
+
+}
+
+document.getElementById("output").value=list.join("\n");
+
+}
+
+function copyUUIDs(){
+
+const text=document.getElementById("output").value;
+
+if(text===""){
+
+alert("Nothing to copy.");
+
+return;
+
+}
+
+navigator.clipboard.writeText(text);
+
+alert("UUID copied!");
+
+}
+
+function downloadUUIDs(){
+
+const text=document.getElementById("output").value;
+
+if(text===""){
+
+alert("Generate UUID first.");
+
+return;
+
+}
+
+const blob=new Blob([text],{type:"text/plain"});
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="uuids.txt";
+
+a.click();
+
+}
+
+function clearUUIDs(){
+
+document.getElementById("output").value="";
+
+document.getElementById("count").value=1;
+
+}
+
+generateUUIDs();
+
+</script>
+
+</body>
+</html>

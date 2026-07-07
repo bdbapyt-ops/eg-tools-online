@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weight Converter</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:550px;
+background:#fff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+font-weight:bold;
+}
+
+input,
+select{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:2px solid #ddd;
+border-radius:8px;
+font-size:16px;
+outline:none;
+}
+
+input:focus,
+select:focus{
+border-color:#007bff;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#007bff;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.result{
+margin-top:20px;
+padding:15px;
+background:#f8f9fa;
+border-radius:8px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+color:#007bff;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Weight Converter</h1>
+
+<label>Weight</label>
+<input type="number" id="value" placeholder="Enter weight">
+
+<label>From</label>
+<select id="from">
+<option value="1">Kilogram (kg)</option>
+<option value="0.001">Gram (g)</option>
+<option value="0.000001">Milligram (mg)</option>
+<option value="1000">Metric Ton (t)</option>
+<option value="0.45359237">Pound (lb)</option>
+<option value="0.028349523125">Ounce (oz)</option>
+<option value="6.35029318">Stone (st)</option>
+</select>
+
+<label>To</label>
+<select id="to">
+<option value="1">Kilogram (kg)</option>
+<option value="0.001">Gram (g)</option>
+<option value="0.000001">Milligram (mg)</option>
+<option value="1000">Metric Ton (t)</option>
+<option value="0.45359237">Pound (lb)</option>
+<option value="0.028349523125">Ounce (oz)</option>
+<option value="6.35029318">Stone (st)</option>
+</select>
+
+<div class="buttons">
+<button onclick="convertWeight()">Convert</button>
+<button onclick="swapUnits()">Swap</button>
+<button onclick="copyResult()">Copy</button>
+<button onclick="resetTool()">Reset</button>
+</div>
+
+<div class="result" id="result">0</div>
+
+</div>
+
+<script>
+
+function convertWeight(){
+
+const value=parseFloat(document.getElementById("value").value);
+
+if(isNaN(value)){
+document.getElementById("result").textContent="0";
+return;
+}
+
+const from=parseFloat(document.getElementById("from").value);
+const to=parseFloat(document.getElementById("to").value);
+
+const kg=value*from;
+const result=kg/to;
+
+document.getElementById("result").textContent=result.toFixed(6);
+
+}
+
+function swapUnits(){
+
+const from=document.getElementById("from");
+const to=document.getElementById("to");
+
+const temp=from.value;
+from.value=to.value;
+to.value=temp;
+
+convertWeight();
+
+}
+
+function copyResult(){
+
+const text=document.getElementById("result").textContent;
+
+navigator.clipboard.writeText(text);
+
+alert("Result copied!");
+
+}
+
+function resetTool(){
+
+document.getElementById("value").value="";
+document.getElementById("from").selectedIndex=0;
+document.getElementById("to").selectedIndex=0;
+document.getElementById("result").textContent="0";
+
+}
+
+document.getElementById("value").addEventListener("input",convertWeight);
+document.getElementById("from").addEventListener("change",convertWeight);
+document.getElementById("to").addEventListener("change",convertWeight);
+
+</script>
+
+</body>
+</html>

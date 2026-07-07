@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discount Calculator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:500px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    color:#444;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#007bff;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.calculate{
+    background:#007bff;
+}
+
+.calculate:hover{
+    background:#0056b3;
+}
+
+.reset{
+    background:#dc3545;
+}
+
+.reset:hover{
+    background:#b52b3a;
+}
+
+.result{
+    margin-top:25px;
+    background:#f8f9fa;
+    padding:18px;
+    border-radius:10px;
+}
+
+.result p{
+    margin:10px 0;
+    font-size:17px;
+}
+
+.result span{
+    color:#007bff;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Discount Calculator</h1>
+
+<div class="input-group">
+<label>Original Price</label>
+<input type="number" id="price" placeholder="Enter original price">
+</div>
+
+<div class="input-group">
+<label>Discount (%)</label>
+<input type="number" id="discount" placeholder="Enter discount percentage">
+</div>
+
+<div class="buttons">
+<button class="calculate" onclick="calculateDiscount()">Calculate</button>
+<button class="reset" onclick="resetForm()">Reset</button>
+</div>
+
+<div class="result">
+
+<p>Discount Amount:
+<span id="discountAmount">0.00</span>
+</p>
+
+<p>Final Price:
+<span id="finalPrice">0.00</span>
+</p>
+
+<p>You Save:
+<span id="saved">0.00</span>
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+function calculateDiscount(){
+
+let price=parseFloat(document.getElementById("price").value);
+let discount=parseFloat(document.getElementById("discount").value);
+
+if(isNaN(price) || isNaN(discount) || price<=0 || discount<0 || discount>100){
+
+alert("Please enter valid values.");
+
+return;
+
+}
+
+let discountAmount=(price*discount)/100;
+let finalPrice=price-discountAmount;
+
+document.getElementById("discountAmount").innerHTML=discountAmount.toFixed(2);
+
+document.getElementById("finalPrice").innerHTML=finalPrice.toFixed(2);
+
+document.getElementById("saved").innerHTML=discountAmount.toFixed(2);
+
+}
+
+function resetForm(){
+
+document.getElementById("price").value="";
+document.getElementById("discount").value="";
+
+document.getElementById("discountAmount").innerHTML="0.00";
+document.getElementById("finalPrice").innerHTML="0.00";
+document.getElementById("saved").innerHTML="0.00";
+
+}
+
+</script>
+
+</body>
+</html>

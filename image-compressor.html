@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Compressor Tool</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:650px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input[type=file]{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.preview{
+    text-align:center;
+    margin:20px 0;
+}
+
+.preview img{
+    max-width:100%;
+    max-height:320px;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:8px;
+}
+
+input[type=range]{
+    width:100%;
+}
+
+#qualityValue{
+    color:#007bff;
+    font-weight:bold;
+}
+
+.info{
+    margin-top:20px;
+}
+
+.info p{
+    margin:8px 0;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Image Compressor</h1>
+
+<input type="file" id="file" accept="image/*">
+
+<div class="preview">
+<img id="preview" style="display:none;">
+</div>
+
+<label>
+Compression Quality :
+<span id="qualityValue">80%</span>
+</label>
+
+<input type="range"
+id="quality"
+min="10"
+max="100"
+value="80">
+
+<div class="info">
+
+<p>Original Size :
+<b id="originalSize">0 KB</b></p>
+
+<p>Compressed Size :
+<b id="compressedSize">0 KB</b></p>
+
+</div>
+
+<button id="download" disabled>
+Download Compressed Image
+</button>
+
+</div>
+
+<script>
+
+const fileInput=document.getElementById("file");
+const preview=document.getElementById("preview");
+const quality=document.getElementById("quality");
+const qualityValue=document.getElementById("qualityValue");
+const originalSize=document.getElementById("originalSize");
+const compressedSize=document.getElementById("compressedSize");
+const download=document.getElementById("download");
+
+let image=new Image();
+let compressedBlob=null;
+
+quality.oninput=function(){
+
+qualityValue.innerHTML=this.value+"%";
+
+if(image.src){
+compressImage();
+}
+
+}
+
+fileInput.onchange=function(e){
+
+const file=e.target.files[0];
+
+if(!file) return;
+
+originalSize.innerHTML=(file.size/1024).toFixed(2)+" KB";
+
+const reader=new FileReader();
+
+reader.onload=function(ev){
+
+image.onload=function(){
+
+preview.src=image.src;
+preview.style.display="block";
+
+compressImage();
+
+}
+
+image.src=ev.target.result;
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
+function compressImage(){
+
+const canvas=document.createElement("canvas");
+
+canvas.width=image.width;
+canvas.height=image.height;
+
+const ctx=canvas.getContext("2d");
+
+ctx.drawImage(image,0,0);
+
+canvas.toBlob(function(blob){
+
+compressedBlob=blob;
+
+compressedSize.innerHTML=(blob.size/1024).toFixed(2)+" KB";
+
+download.disabled=false;
+
+},"image/jpeg",quality.value/100);
+
+}
+
+download.onclick=function(){
+
+if(!compressedBlob) return;
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(compressedBlob);
+
+a.download="compressed-image.jpg";
+
+a.click();
+
+}
+
+</script>
+
+</body>
+</html>
